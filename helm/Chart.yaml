@@ -1,0 +1,22 @@
+# Copyright 2026 IntelMedica.ai
+# Licensed under the Apache License, Version 2.0
+
+apiVersion: v2
+name: mcp-postgres-toolkit
+description: Production-ready deployment of MCP Toolbox for Databases on Kubernetes
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: https://github.com/gitjfmd/mcp-postgres-toolkit
+sources:
+  - https://github.com/gitjfmd/mcp-postgres-toolkit
+  - https://github.com/googleapis/genai-toolbox
+maintainers:
+  - name: IntelMedica.ai
+    url: https://intelmedica.ai
+keywords:
+  - mcp
+  - postgres
+  - database
+  - ai
+  - toolbox

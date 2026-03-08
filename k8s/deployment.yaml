@@ -1,0 +1,84 @@
+# Copyright 2026 IntelMedica.ai
+# Licensed under the Apache License, Version 2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-toolbox
+  namespace: mcp-db
+  labels:
+    app.kubernetes.io/name: mcp-postgres-toolkit
+    app.kubernetes.io/component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-toolbox
+  template:
+    metadata:
+      labels:
+        app: mcp-toolbox
+        app.kubernetes.io/name: mcp-postgres-toolkit
+        app.kubernetes.io/component: server
+    spec:
+      containers:
+        - name: mcp-toolbox
+          image: us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:latest
+          args:
+            - "--tools-file"
+            - "/app/tools.yaml"
+            - "--address"
+            - "0.0.0.0"
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+              name: http
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-toolbox-postgres
+                  key: DB_HOST
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-toolbox-postgres
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-toolbox-postgres
+                  key: DB_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-toolbox-postgres
+                  key: DB_NAME
+          volumeMounts:
+            - name: tools-config
+              mountPath: /app/tools.yaml
+              subPath: tools.yaml
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+      volumes:
+        - name: tools-config
+          configMap:
+            name: mcp-toolbox-config

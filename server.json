@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.gitjfmd/mcp-postgres-toolkit",
+  "title": "MCP PostgreSQL Toolkit",
+  "description": "Production-ready MCP server for PostgreSQL database access with parameterized queries, deployed via Docker, Kubernetes, or Helm",
+  "repository": {
+    "url": "https://github.com/gitjfmd/mcp-postgres-toolkit",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/gitjfmd/mcp-postgres-toolkit",
+      "version": "0.1.0",
+      "transport": {
+        "type": "streamable-http"
+      },
+      "environmentVariables": [
+        {
+          "name": "DB_USER",
+          "description": "PostgreSQL username",
+          "isRequired": true,
+          "isSecret": false
+        },
+        {
+          "name": "DB_PASSWORD",
+          "description": "PostgreSQL password",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "DB_NAME",
+          "description": "PostgreSQL database name",
+          "isRequired": true,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

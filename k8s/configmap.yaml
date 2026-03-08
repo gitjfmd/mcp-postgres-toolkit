@@ -1,0 +1,62 @@
+# Copyright 2026 IntelMedica.ai
+# Licensed under the Apache License, Version 2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-toolbox-config
+  namespace: mcp-db
+  labels:
+    app.kubernetes.io/name: mcp-postgres-toolkit
+    app.kubernetes.io/component: config
+data:
+  tools.yaml: |
+    sources:
+      my-pg-source:
+        kind: postgres
+        host: ${DB_HOST}
+        port: 5432
+        database: ${DB_NAME}
+        user: ${DB_USER}
+        password: ${DB_PASSWORD}
+
+    tools:
+      list-tables:
+        kind: postgres-sql
+        source: my-pg-source
+        description: "List all tables in the public schema."
+        statement: |
+          SELECT table_name
+          FROM information_schema.tables
+          WHERE table_schema = 'public'
+          ORDER BY table_name;
+
+      describe-table:
+        kind: postgres-sql
+        source: my-pg-source
+        description: "Describe the columns of a specific table."
+        parameters:
+          - name: table_name
+            type: string
+            description: "Name of the table to describe."
+        statement: |
+          SELECT column_name, data_type, is_nullable, column_default
+          FROM information_schema.columns
+          WHERE table_schema = 'public' AND table_name = $1
+          ORDER BY ordinal_position;
+
+      run-query:
+        kind: postgres-sql
+        source: my-pg-source
+        description: "Execute a read-only SQL query."
+        parameters:
+          - name: query
+            type: string
+            description: "The SELECT query to execute."
+        statement: "SELECT * FROM ($1) AS subquery LIMIT 100;"
+
+    toolsets:
+      default:
+        - list-tables
+        - describe-table
+        - run-query

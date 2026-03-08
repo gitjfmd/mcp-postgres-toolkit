@@ -1,0 +1,57 @@
+# Copyright 2026 IntelMedica.ai
+# Licensed under the Apache License, Version 2.0
+
+# -- Number of replicas
+replicaCount: 1
+
+image:
+  # -- Container image repository
+  repository: us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image tag (defaults to Chart appVersion)
+  tag: ""
+
+# -- Image pull secrets for private registries
+imagePullSecrets: []
+
+# -- Override the chart name
+nameOverride: ""
+# -- Override the full release name
+fullnameOverride: ""
+
+service:
+  # -- Kubernetes service type (ClusterIP, NodePort, LoadBalancer)
+  type: ClusterIP
+  # -- Service port
+  port: 5000
+
+# PostgreSQL connection settings
+postgres:
+  # -- PostgreSQL host
+  host: "your-postgres-host"
+  # -- PostgreSQL port
+  port: 5432
+  # -- PostgreSQL username
+  user: "myuser"
+  # -- PostgreSQL password
+  password: "changeme"
+  # -- PostgreSQL database name
+  database: "mydb"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+# -- Node selector for pod scheduling
+nodeSelector: {}
+
+# -- Tolerations for pod scheduling
+tolerations: []
+
+# -- Affinity rules for pod scheduling
+affinity: {}

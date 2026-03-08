@@ -1,0 +1,10 @@
+.git
+.env
+*.md
+k8s/
+helm/
+.github/
+.gitignore
+.dockerignore
+LICENSE
+server.json
